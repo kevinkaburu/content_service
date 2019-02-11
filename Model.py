@@ -7,6 +7,29 @@ from flask_sqlalchemy import SQLAlchemy
 ma = Marshmallow()
 db = SQLAlchemy()
 
+class ContentType(db.Model):
+    __tablename__ = "content_type"
+    content_type_id = db.Column(db.Integer, primary_key = True)
+    status = db.Column(db.Boolean,nullable=False)
+    content_type = db.Column(db.String(80),nullable = False)
+    created = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+    modified = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+
+    def __init__(self,content_type,status):
+        self.content_type = content_type
+        self.status = status
+
+class ContentTypeSchema(ma.Schema):
+    content_type_id =  fields.Integer(dump_only=True)
+    content_type = fields.String(required=True, validate=validate.Length(1))
+    status =  fields.Boolean(required=False)
+    created = fields.DateTime()
+    modified = fields.DateTime()
+
+    class Meta:
+        fields = ('content_type_id','content_type')
+
+
 
 class Category(db.Model):
     __tablename__ = 'category'
@@ -53,6 +76,7 @@ class AuthorSchema(ma.Schema):
     author_id = fields.Integer(dump_only=True)
     user_id= fields.Integer(required=True)
     author_name = fields.String(required=True, validate=validate.Length(1))
+    status =  fields.Boolean(required=False)
     created = fields.DateTime()
     modified = fields.DateTime()
 
