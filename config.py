@@ -25,6 +25,8 @@ class Config(object):
     MAIL_USE_SSL=False
     JWT_KEY=os.environ.get('JWT_KEY')
     CONFIRM_MAIL_REDIRECT_LINK=os.environ.get('CONFIRM_MAIL_REDIRECT_LINK')
+    AWS_ACCESS_KEY=os.environ.get('AWS_ACCESS_KEY')
+    AWS_SECRET=os.environ.get('AWS_SECRET')
 
 class DevelopmentConfig(Config):
     """Configurations for Development."""
