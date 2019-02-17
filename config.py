@@ -27,6 +27,8 @@ class Config(object):
     CONFIRM_MAIL_REDIRECT_LINK=os.environ.get('CONFIRM_MAIL_REDIRECT_LINK')
     AWS_ACCESS_KEY=os.environ.get('AWS_ACCESS_KEY')
     AWS_SECRET=os.environ.get('AWS_SECRET')
+    AWS_BUCKET = os.environ.get("TEST_AWS_BUCKET")
+    AWS_REGION = os.environ.get("TEST_AWS_REGION")
 
 class DevelopmentConfig(Config):
     """Configurations for Development."""
@@ -37,6 +39,8 @@ class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL')
+    AWS_REGION = os.environ.get("TEST_AWS_REGION")
+    AWS_BUCKET = os.environ.get("TEST_AWS_BUCKET")
     DEBUG = True
 
 class StagingConfig(Config):
@@ -48,6 +52,8 @@ class ProductionConfig(Config):
     """Configurations for Production."""
     DEBUG = False
     TESTING = False
+    AWS_REGION = os.environ.get("AWS_REGION")
+    AWS_BUCKET = os.environ.get("TEST_AWS_BUCKET")
 
 
 app_config = {

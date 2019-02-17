@@ -1,11 +1,76 @@
-from flask import Flask
+from flask import Flask, current_app
 from marshmallow import Schema, fields, pre_load, validate
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
+import Aws;
 
 
 ma = Marshmallow()
 db = SQLAlchemy()
+
+
+class Contentcategory(db.Model):
+    __tablename__ = "content_category"
+    content_category_id = db.Column(db.Integer, primary_key = True)
+    content_id = db.Column(db.Integer, db.ForeignKey('content.content_id', ondelete='CASCADE'), nullable =False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='CASCADE'), nullable =False)
+    
+    def __init__(self,content_id,category_id):
+        self.content_id = content_id
+        self.category_id = category_id
+
+
+class ContentcategorySchema(ma.Schema):
+    content_category_id =  fields.Integer(dump_only=True)
+    content_id = fields.Integer(required=True)
+    category_id = fields.Integer(required=True)
+    content = fields.Nested('ContentSchema', many=True, only=('content_id', 'content_key','summary','cover_key','author_id','content_title'))
+    category = fields.Nested('CategorySchema', many=True, only=('category_id', 'category_name','parent_category_id',))
+
+
+
+class Content(db.Model):
+    """The monster/beast is here"""
+    __tablename__ = "content"
+
+    content_id = db.Column(db.Integer, primary_key = True)
+    content_title = db.Column(db.String(160),nullable = False)
+    content_type_id = db.Column(db.Integer, db.ForeignKey('content_type.content_type_id', ondelete='CASCADE'), nullable =False)
+    author_id = db.Column(db.Integer, db.ForeignKey('author.author_id', ondelete='CASCADE'), nullable =False)
+    user_id = db.Column(db.Integer,nullable = False)
+    cover_key =  db.Column(db.String(160))
+    content_key = db.Column(db.String(160))
+    summary = db.Column(db.Text)
+
+    def __init__(self,content_title,content_type_id,author_id,user_id,summary=''):
+        self.author_id =author_id
+        self.content_title = content_title
+        self.user_id = user_id
+        self.content_type_id = content_type_id
+        self.summary = summary
+
+
+class ContentSchema(ma.Schema):
+    content_id = fields.Integer(dump_only=True)
+    content_title = fields.String(required=True, validate=validate.Length(2))
+    cover_key = fields.String(required=False, validate=validate.Length(2))
+    content_key = fields.String(required=False, validate=validate.Length(2))
+    summary = fields.String(required=True, validate=validate.Length(10))
+    content_type_id = fields.Integer(required=True)
+    author_id = fields.Integer(required=True)
+    user_id = fields.Integer(required=True)
+    content_type = fields.Nested('ContentTypeSchema', many=False, only=('content_type_id', 'content_type',))
+    author = fields.Nested('AuthorSchema', many=False, only=('author_id', 'author_name',))
+    content_categories = fields.Nested('ContentcategorySchema', many=True, only=('content_category_id', 'category_id',))
+    #cover_url = Aws.downlink(cover_key,current_app._get_current_object())
+
+    class Meta:
+        fields = ('content_id','content_title','summary','content_type','author','content_categories')
+
+
+
+
+
 
 class ContentType(db.Model):
     __tablename__ = "content_type"
