@@ -79,7 +79,7 @@ class content(Resource):
             return {"status":"fail","message":"categories [ {0} ] does not exists.".format(json_data['category_ids'])}, 422
 
         db.session.commit()
-        #cover_url = Aws.downlink(aws_data['cover_key'])
+        cover_url = Aws.downlink(aws_data['cover_key'])
 
         content_data = content_schema.dump(content).data
-        return {"status":"success","content":content_data,"content_upload":aws_data['content_url'],"cover_upload":aws_data['cover_url']},201
+        return {"status":"success","content":content_data,"content_upload":aws_data['content_url'],"cover_upload":aws_data['cover_url'],"cover_link":cover_url},201

@@ -5,7 +5,7 @@ from resources.Category import category
 from resources.ContentType import content_type
 from resources.Content import content
 
-api_bp = Blueprint('user', __name__)
+api_bp = Blueprint('content', __name__)
 api = Api(api_bp)
 
 # Routes

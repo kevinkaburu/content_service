@@ -17,9 +17,9 @@ def uplink( user_id, extention, content_id):
     content_key = "{0}/{1}-{2}.{3}".format(content_id, user_id, uid, extention)
     cover_key = "{0}/{1}-{2}".format(content_id, user_id, uid)
     content_url = s3.generate_presigned_url(ClientMethod='put_object', Params={
-                                            'Bucket': current_app.config['AWS_BUCKET'], 'Key': content_key}, ExpiresIn=3600)
+                                            'Bucket': current_app.config['AWS_BUCKET'], 'Key': content_key}, ExpiresIn=1800)
     cover_url = s3.generate_presigned_url(ClientMethod='put_object', Params={
-                                          'Bucket': current_app.config['AWS_BUCKET'], 'Key': cover_key}, ExpiresIn=3600)
+                                          'Bucket': current_app.config['AWS_BUCKET'], 'Key': cover_key}, ExpiresIn=1800)
     return {"status": "sucess", "content_url": content_url, "content_key": content_key, "cover_key": cover_key, "cover_url": cover_url}
 
 
