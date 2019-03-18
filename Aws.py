@@ -14,8 +14,8 @@ def uplink( user_id, extention, content_id):
                       region_name=current_app.config['AWS_REGION'],
                       config=Config(s3={'addressing_style': 'path'}, signature_version='s3v4'))
     uid = uuid.uuid4()
-    content_key = "{0}/{1}-{2}.{3}".format(content_id, user_id, uid, extention)
-    cover_key = "{0}/{1}-{2}".format(content_id, user_id, uid)
+    content_key = "{}-{}.{}".format(content_id, user_id, extention)
+    cover_key = "cover/{}".format(content_id,)
     content_url = s3.generate_presigned_url(ClientMethod='put_object', Params={
                                             'Bucket': current_app.config['AWS_BUCKET'], 'Key': content_key}, ExpiresIn=1800)
     cover_url = s3.generate_presigned_url(ClientMethod='put_object', Params={
